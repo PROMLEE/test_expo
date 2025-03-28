@@ -1,42 +1,32 @@
-import React, { useRef } from "react";
-import { Text, StyleSheet, View, Button } from "react-native";
-import BottomSheet from "@gorhom/bottom-sheet";
-import CustomBottomSheet from "@/components/ui/CustomBottomSheet";
+import React from "react";
+import "@/localization";
+import { View, Text, Button } from "react-native";
+import { useTranslation } from "react-i18next";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const App = () => {
-  // ref
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const { t, i18n } = useTranslation();
 
-  // renders
+  const changeLanguage = async (language: "en" | "ko" | "ar") => {
+    i18n.changeLanguage(language);
+    await AsyncStorage.setItem("@app_language", language);
+  };
+
   return (
-    <View style={styles.container}>
-      <Button title="expand" onPress={() => bottomSheetRef.current?.expand()} />
-      <CustomBottomSheet
-        component={
-          <View style={styles.contentContainer}>
-            <Text>Awesome 🎉</Text>
-            <Button
-              title="close"
-              onPress={() => bottomSheetRef.current?.close()}
-            />
-          </View>
-        }
-        bottomSheetModalRef={bottomSheetRef}
-      />
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 20,
+      }}
+    >
+      <Text>{t("welcome")}</Text>
+      <Button title="English" onPress={() => changeLanguage("en")} />
+      <Button title="Korean" onPress={() => changeLanguage("ko")} />
+      <Button title="Arabic" onPress={() => changeLanguage("ar")} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  contentContainer: {
-    flex: 1,
-    padding: 36,
-    alignItems: "center",
-  },
-});
 
 export default App;
